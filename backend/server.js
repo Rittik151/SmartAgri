@@ -20,4 +20,13 @@ app.use('/api/requests', requestRoutes);
 
 app.get('/', (req, res) => res.send('Power Distribution API running'));
 
-app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+const server = app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+
+server.on('error', (err) => {
+	if (err && err.code === 'EADDRINUSE') {
+		console.error(`Error: port ${PORT} is already in use.`);
+		console.error('Options: set a different PORT, or stop the process using this port.');
+		process.exit(1);
+	}
+	throw err;
+});
